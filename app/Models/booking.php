@@ -32,7 +32,7 @@ class booking extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class); // Belongs to the User model
+        return $this->belongsTo(related: User::class); // Belongs to the User model
     }
 
     public function package()

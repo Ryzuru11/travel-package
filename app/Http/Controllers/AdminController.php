@@ -14,7 +14,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        $User = User::with('bookings')->orderBy('created_at', 'DESC')->get();
+$User = User::with('bookings')->orderBy('created_at', 'DESC')->get();
         // count all users
         $allRegisterUsers = User::count();
         // count all Reservations
@@ -83,5 +83,5 @@ class AdminController extends Controller
 
     }
 
-
+    
 }

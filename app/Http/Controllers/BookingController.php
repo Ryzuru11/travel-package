@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\booking;
+use App\Models\travelPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class BookingController extends Controller
 {
@@ -64,7 +66,7 @@ class BookingController extends Controller
     // for Admin
     public function showOneUserBookingDataAll($id)
     {
-        $bookings = Booking::withUserAndPackage(['user', 'package'])
+        $bookings = Booking::withUserAndPackage()
                 ->where('id', $id)
                 ->orderBy('created_at', 'DESC')
                 ->get();
@@ -89,7 +91,7 @@ class BookingController extends Controller
     //show user invoice details
     public function invoiceDetails($id)
     {
-        $booking = Booking::withUserAndPackage(['user', 'package'])
+        $booking = Booking::withUserAndPackage()
                 ->where('id', $id)
                 ->orderBy('created_at', 'DESC')
                 ->first();
@@ -98,6 +100,11 @@ class BookingController extends Controller
         return view('profile.profileInvoiceDetails', compact('booking')); // Pass data to the view    
     }
 
+    // NEW: Show booking form
+    public function showBookingForm(travelPackage $travelPackage)
+    {
+        return view('user.booking.form', compact('travelPackage'));
+    }
 
     /**
      * Store a newly created resource in storage.

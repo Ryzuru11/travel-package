@@ -1,5 +1,5 @@
 {{-- in layouts folder, mainStructure file has user navigation bar and footer --}}
-@extends('layouts/mainStructure')
+@extends('layouts.guest')
 
 @section('content')
 

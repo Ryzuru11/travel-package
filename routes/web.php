@@ -24,10 +24,11 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-//login page
-Route::view('/login', 'auth.login')->name('loginPage');
+//login and register page
+Route::view('/login', 'auth.login')->name('login');
+Route::view('/register', 'auth.register')->name('register');
 // show login for user before book package
-Route::get('/login', [BookingController::class, 'showLoginView'])->name('loginPage');
+Route::get('/login/showLoginView', [BookingController::class, 'showLoginView'])->name('showLoginView');
 //for user booking
 Route::post('/package', [BookingController::class, 'store'])->name('user.booking.store');
 
@@ -61,58 +62,51 @@ Route::controller(UserMassageController::class)->group(function(){
     Route::post('/contactUs', 'store')->name('user.contactUs.store');
 });
 
-
-
-
 // Admin routes start
-
-// for admin panel navigation
-Route::view('/admin/massage', 'admin.masage')->name('admin.massage');
-Route::view('/admin/review', 'admin.review')->name('admin.review');
-Route::view('/admin/addBlog', 'admin.addBlog')->name('admin.addBlog');
-Route::get('/admin/dashboard', [AdminController::class, 'indexAdminDashboard'])->name('admin.home');
-// for admin setting
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
+    // for admin panel navigation
+    Route::view('/admin/massage', 'admin.masage')->name('admin.massage');
+    Route::view('/admin/review', 'admin.review')->name('admin.review');
+    Route::view('/admin/addBlog', 'admin.addBlog')->name('admin.addBlog');
+    Route::get('/admin/dashboard', [AdminController::class, 'indexAdminDashboard'])->name('admin.home');
+    // for admin setting
     Route::get('/admin/setting', [AdminController::class, 'indexAdminSetting'])->name('admin.setting');
-});
 
-require __DIR__.'/auth.php';
+    //admin can user's manage
+    Route::controller(AdminController::class)->group(function(){
+        Route::get('/admin/manageUsers', 'indexManageUsers')->name('admin.manageUsers');
+        Route::delete('/admin/manageUsers/{id}', 'destroy')->name('admin.user.destroyBlog');
+    });
 
+    //for admin booking 
+    Route::controller(BookingController::class)->group(function(){
+        //for admin booking details
+        Route::get('/admin/Booking',  'showAllBookingData')->name('admin.booking');
+        Route::get('/admin/Booking/{id}',  'showOneUserBookingDataAll')->name('admin.showOneUserBookingDataAll');
+        //For Admin payment Receipt Image Acccept or Reject
+        Route::post('/profile/invoice/{id}',  'paymentReceiptImageAcccept')->name('admin.payment.receipt.image.Acccept');
+        Route::post('/profile/invoice/a/{id}',  'paymentReceiptImageReject')->name('admin.payment.receipt.image.Reject');
+    });
 
-//admin can user's manage
-Route::controller(AdminController::class)->group(function(){
-    Route::get('/admin/manageUsers', 'index')->name('admin.manageUsers');
-    Route::delete('/admin/manageUsers/{id}', 'destroy')->name('admin.user.destroyBlog');
-});
+    // for admin blog post (funtions start)
+    Route::controller(BlogController::class)->group(function(){
+        Route::post('/admin/addBlog', 'store')->name('admin.add.blog');
+        Route::get('/admin/addBlog', 'showBlogs')->name('admin.addBlog');
+        Route::get('/admin/{blogPost}/editBlog', 'edit')->name('admin.editBlog');
+        Route::put('/admin/{blogPost}', 'update')->name('admin.updateBlog');
+        Route::delete('/admin/{blogPost}', 'destroy')->name('admin.destroyBlog');
+    });
 
-//for admin booking 
-Route::controller(BookingController::class)->group(function(){
-    //for admin booking details
-    Route::get('/admin/Booking',  'showAllBookingData')->name('admin.booking');
-    Route::get('/admin/Booking/{id}',  'showOneUserBookingDataAll')->name('admin.showOneUserBookingDataAll');
-    //For Admin payment Receipt Image Acccept or Reject
-    Route::post('/profile/invoice/{id}',  'paymentReceiptImageAcccept')->name('admin.payment.receipt.image.Acccept');
-    Route::post('/profile/invoice/a/{id}',  'paymentReceiptImageReject')->name('admin.payment.receipt.image.Reject');
-});
+    //admin Travel Package
+    Route::controller(TravelPackageController::class)->group(function(){
+        Route::Get('admin/addPackage/page', 'index')->name('admin.addPackage.create');
+        Route::post('admin/addPackage/page', 'store')->name('admin.addPackage.store');
+        Route::get('/admin/showPackage', 'showForAdmin')->name('admin.travelPackage.show');
+    });
 
-// for admin blog post (funtions start)
-Route::controller(BlogController::class)->group(function(){
-    Route::post('/admin/addBlog', 'store')->name('admin.add.blog');
-    Route::get('/admin/addBlog', 'showBlogs')->name('admin.addBlog');
-    Route::get('/admin/{blogPost}/editBlog', 'edit')->name('admin.editBlog');
-    Route::put('/admin/{blogPost}', 'update')->name('admin.updateBlog');
-    Route::delete('/admin/{blogPost}', 'destroy')->name('admin.destroyBlog');
-});
-
-//admin Travel Package
-Route::controller(TravelPackageController::class)->group(function(){
-    Route::Get('admin/addPackage/page', 'index')->name('admin.addPackage.create');
-    Route::post('admin/addPackage/page', 'store')->name('admin.addPackage.store');
-    Route::get('/admin/showPackage', 'showForAdmin')->name('admin.travelPackage.show');
-});
-
-//for admin massage
-Route::controller(UserMassageController::class)->group(function(){
-    Route::get('/admin/massage', 'show')->name('admin.massage');
-    Route::delete('/admin/massage/{userMassage}', 'destroy')->name('admin.massage.delete');
+    //for admin massage
+    Route::controller(UserMassageController::class)->group(function(){
+        Route::get('/admin/massage', 'show')->name('admin.massage');
+        Route::delete('/admin/massage/{userMassage}', 'destroy')->name('admin.massage.delete');
+    });
 });

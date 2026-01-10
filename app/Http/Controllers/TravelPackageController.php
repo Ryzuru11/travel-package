@@ -111,10 +111,24 @@ class TravelPackageController extends Controller
         return view('admin.addTravelPackage', compact('travelPackage')); // Pass data to the view
     }
 
-    public function showForUser(travelPackage $travelPackage)
+    public function showForUser(Request $request)
     {
-        $travelPackage = travelPackage::orderBy('created_at','DESC')->get();
-        return view('user.package', compact('travelPackage')); // Pass data to the view
+        $query = travelPackage::query();
+
+        // Filter by category
+        if ($request->has('tour_type') && !empty($request->tour_type)) {
+            $query->where('tour_type', $request->tour_type);
+        }
+
+        // Sort by price
+        if ($request->has('sort') && $request->sort == 'high_to_low') {
+            $query->orderBy('price_start_from', 'desc');
+        } else {
+            $query->orderBy('price_start_from', 'asc');
+        }
+
+        $travelPackages = $query->get();
+        return view('user.package', compact('travelPackages'));
     }
 
     // for user travel package page
