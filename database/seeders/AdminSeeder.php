@@ -13,13 +13,26 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create admin user
         User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
+            'name' => 'Admin Dilaga Tour',
+            'email' => 'zurokmega2017@gmail.com',
+            'user_country' => 'Indonesia',
+            'phone_number' => '+6281917166060',
+            'role' => 'admin',
+            'password' => Hash::make('admin123'),
+            'email_verified_at' => now(),
+        ]);
+
+        // Create sample regular user
+        User::create([
+            'name' => 'John Doe',
+            'email' => 'zurokmega2017@gmail.com',
+            'user_country' => 'Indonesia',
+            'phone_number' => '+6281917166060',
+            'role' => 'user',
             'password' => Hash::make('password'),
-            'is_admin' => true,
-            'phone_number' => '081234567890', // Sudah ada
-            'user_country' => 'Indonesia', // Tambahkan ini
+            'email_verified_at' => now(),
         ]);
     }
 }

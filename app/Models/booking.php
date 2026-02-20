@@ -14,7 +14,6 @@ class booking extends Model
     protected $table = 'bookings';
 
     protected $fillable = [
-        'package_name',
         'user_id',    
         'package_id',   
         'date',
@@ -23,10 +22,11 @@ class booking extends Model
         'pick_up_location',
         'pick_up_location_details',
         'total_fee',
-        'Reservation Status',
-        'Invoice Status',
-        'Payment Status',
+        'reservation_status',
+        'invoice_status',
+        'payment_status',
         'payment_receipt',
+        'payment_receipt_image',
     ];
 
 
@@ -37,7 +37,12 @@ class booking extends Model
 
     public function package()
     {
-        return $this->belongsTo(TravelPackage::class); // Belongs to the TravelPackage model
+        return $this->belongsTo(TravelPackage::class, 'package_id'); // Belongs to the TravelPackage model
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class); // Has one payment
     }
 
     //for get two table data

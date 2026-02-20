@@ -30,7 +30,9 @@ class TravelPackageController extends Controller
             'image_2' => 'nullable|image|mimes:jpeg,svg,png,jpg,gif,webp|max:10240', // Ensure image file, max 10MB
             'image_3' => 'nullable|image|mimes:jpeg,svg,png,jpg,gif,webp|max:10240', // Ensure image file, max 10MB
             'duration' => 'required|string|max:255',
-            'tour_type' => 'required|in:Adventure Tour,Beach Holiday Tour,Cultural Tour,Business Trip Tour, Wildlife Safaris',
+            'tour_type' => 'required|in:Adventure Tour,Beach Holiday Tour,Cultural Tour,Business Trip Tour,Wildlife Safaris',
+            'service_type' => 'required|in:hotel_pickup,airport_transfer,komodo_tour,lombok_destination,sumbawa_destination',
+            'destination_details' => 'nullable|string',
             'price_start_from' => 'required|numeric|min:0',
             'overview' => 'required|string',
             'included_things' => 'required|string',
@@ -53,6 +55,8 @@ class TravelPackageController extends Controller
         $travelPackage->package_name = $request->package_name;
         $travelPackage->duration = $request->duration;
         $travelPackage->tour_type = $request->tour_type;
+        $travelPackage->service_type = $request->service_type;
+        $travelPackage->destination_details = $request->destination_details;
         $travelPackage->price_start_from = $request->price_start_from;
         $travelPackage->overview = $request->overview;
         $travelPackage->included_things = $request->included_things;
@@ -115,29 +119,53 @@ class TravelPackageController extends Controller
     {
         $query = travelPackage::query();
 
-        // Filter by category
+        // Filter by service type
+        if ($request->has('service_type') && !empty($request->service_type)) {
+            $query->where('service_type', $request->service_type);
+        }
+
+        // Filter by tour category (multiple selection)
         if ($request->has('tour_type') && !empty($request->tour_type)) {
-            $query->where('tour_type', $request->tour_type);
+            $tourTypes = is_array($request->tour_type) ? $request->tour_type : [$request->tour_type];
+            $query->whereIn('tour_type', $tourTypes);
+        }
+
+        // Filter by date (if needed for future implementation)
+        if ($request->has('date') && !empty($request->date)) {
+            // For now, we'll just pass it through - can be implemented later
+            // $query->where('available_date', '>=', $request->date);
         }
 
         // Sort by price
-        if ($request->has('sort') && $request->sort == 'high_to_low') {
-            $query->orderBy('price_start_from', 'desc');
+        if ($request->has('sort')) {
+            if ($request->sort == 'high_to_low') {
+                $query->orderBy('price_start_from', 'desc');
+            } else {
+                $query->orderBy('price_start_from', 'asc');
+            }
         } else {
-            $query->orderBy('price_start_from', 'asc');
+            // Default sorting by created_at desc to show newest packages first
+            $query->orderBy('created_at', 'desc');
         }
 
         $travelPackages = $query->get();
+        
+        // Debug information (remove in production)
+        if (config('app.debug')) {
+            \Log::info('Package search query', [
+                'filters' => $request->all(),
+                'count' => $travelPackages->count(),
+                'sql' => $query->toSql()
+            ]);
+        }
+        
         return view('user.package', compact('travelPackages'));
     }
 
     // for user travel package page
     public function showTravelPackagePage($id){
         $travelPackage = travelPackage::findOrFail($id);
-        return view('user.packagePage',[ 'travelPackage' => $travelPackage
-        
-    ]);
-        
+        return view('user.packagePage', compact('travelPackage'));
     }
 
     /**
@@ -164,7 +192,9 @@ class TravelPackageController extends Controller
             'image_2' => 'nullable|image|mimes:jpeg,svg,png,jpg,gif,webp|max:10240', // Ensure image file, max 10MB
             'image_3' => 'nullable|image|mimes:jpeg,svg,png,jpg,gif,webp|max:10240', // Ensure image file, max 10MB
             'duration' => 'required|string|max:255',
-            'tour_type' => 'required|in:Adventure Tour,Beach Holiday Tour,Cultural Tour,Business Trip Tour, Wildlife Safaris',
+            'tour_type' => 'required|in:Adventure Tour,Beach Holiday Tour,Cultural Tour,Business Trip Tour,Wildlife Safaris',
+            'service_type' => 'required|in:hotel_pickup,airport_transfer,komodo_tour,lombok_destination,sumbawa_destination',
+            'destination_details' => 'nullable|string',
             'price_start_from' => 'required|numeric|min:0',
             'overview' => 'required|string',
             'included_things' => 'required|string',
@@ -185,6 +215,8 @@ class TravelPackageController extends Controller
         $travelPackage->package_name = $request->package_name;
         $travelPackage->duration = $request->duration;
         $travelPackage->tour_type = $request->tour_type;
+        $travelPackage->service_type = $request->service_type;
+        $travelPackage->destination_details = $request->destination_details;
         $travelPackage->price_start_from = $request->price_start_from;
         $travelPackage->overview = $request->overview;
         $travelPackage->included_things = $request->included_things;

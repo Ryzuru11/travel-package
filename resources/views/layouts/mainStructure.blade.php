@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/navBar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/aboutUs.css') }}">
@@ -15,8 +16,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/home.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/package.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/payment.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/user_css/dilaga-tour.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/admin_css/admin-package.css') }}">
+    
+    @stack('styles')
+    
     <title>{{ config('app.name')}}</title>
 </head>
 <body>
@@ -31,6 +37,14 @@
     {{-- footer --}}
     @include('layouts.footer')
 
+    {{-- Floating WhatsApp Button --}}
+    <div class="floating-whatsapp">
+        <a href="https://wa.me/6281917166060" target="_blank" class="whatsapp-btn">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-tooltip">{{ __('messages.chat_with_us') }}</span>
+        </a>
+    </div>
+
 
     
 
@@ -38,6 +52,8 @@
     <script src="{{ asset('js/profile.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    
+    @stack('scripts')
 
 </body>
 </html>

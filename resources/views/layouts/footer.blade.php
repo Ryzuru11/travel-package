@@ -4,19 +4,19 @@
             <ul>
                 <li class="fw-bold">Contact Us</li> <br>
                 <li>Toll Free Customer Care</li>
-                <li>+6281917166060</li>
+                <li>+62 859 5536 9598</li>
             </ul>  
             <br/>  
             <ul>
                 <li class="fw-bold">Email Address</li>
-                <li class="fst-italic">zurokmega2017@gmail.com</li>
+                <li class="fst-italic">hilmansatiapebrian9715@gmail.com</li>
             </ul>  
             <br/>     
             <ul>
                 <li class="fw-bold">Address</li>
-                <li><address>Jl. Pantai Kuta No. 24/2<br>
-                    Kec. Pemenang, Kab. Lombok Utara<br>
-                    Nusa Tenggara Barat, Indonesia <br></address></li>
+                <li><address>Jl. Kirab Remaja<br>
+                    Kec. Narmada, Kabupaten Lombok Barat<br>
+                    Nusa Tenggara Bar. 83371<br></address></li>
             </ul>                          
         </div>
 
@@ -44,7 +44,7 @@
         </div>
 
         <div>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3941.915920800244!2d116.2833766!3d-8.8874093!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dcda9d228d27eff%3A0xb04e56b4125fbffc!2sKuta%20Circle%20Homestay!5e0!3m2!1sid!2sid!4v1764646169234!5m2!1sid!2sid" 
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.056916829633!2d116.18498307477523!3d-8.59052649145434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dcdb88efad0cbaf%3A0x46615c9e78e3422f!2sJl.%20Kirab%20Remaja%2C%20Kec.%20Narmada%2C%20Kabupaten%20Lombok%20Barat%2C%20Nusa%20Tenggara%20Bar.%2083371!5e0!3m2!1sid!2sid!4v1771560688379!5m2!1sid!2sid" 
             width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
             </iframe>
         </div>

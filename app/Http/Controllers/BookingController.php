@@ -154,36 +154,44 @@ class BookingController extends Controller
     //user payment_receipt upload
     public function paymentReceiptImage(Request $request, $id)
     {
-        $rules =[
-            'payment_receipt' => 'nullable|image|mimes:jpeg,svg,png,jpg,webp|max:10240', // Ensure image file, max 10MB
+        $rules = [
+            'payment_receipt_image' => 'required|image|mimes:jpeg,png,jpg,pdf|max:5120', // Max 5MB
         ];
 
-        $validator = Validator::make($request->all(),  $rules);
-        //to show massages | check validate
+        $validator = Validator::make($request->all(), $rules);
+        
         if ($validator->fails()) {
-            return redirect()->route('profile.profileInvoiceDetails', ['id' => $id])->withErrors($validator)->withInput();
+            return redirect()->route('profile.showInvoiceDetails', ['id' => $id])
+                           ->withErrors($validator)
+                           ->withInput();
         }
         
-          // Find the existing booking record
-        $booking = Booking::find($id);
+        // Find the existing booking record
+        $booking = Booking::findOrFail($id);
+        
+        // Verify user owns this booking
+        if ($booking->user_id !== Auth::id()) {
+            return redirect()->route('profile.Invoice')
+                           ->with('error', 'Unauthorized access');
+        }
 
-        $booking->payment_status = 'Success';
-        $booking->save();
-
-        //set the attribute for images
-        if ($request->hasFile('payment_receipt')) {
-            $payment_receipt = $request->file('payment_receipt');
-            $ext = $payment_receipt->getClientOriginalExtension();
-            $imageName = time() . '.' . $ext;
-            $payment_receipt->move(public_path('image/uploads/payment-recipt'), $imageName);
-            $booking->payment_receipt = $imageName;
+        // Handle file upload
+        if ($request->hasFile('payment_receipt_image')) {
+            $file = $request->file('payment_receipt_image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            
+            // Move file to public directory
+            $file->move(public_path('image/uploads/payment-recipt'), $filename);
+            
+            // Update booking record
+            $booking->payment_receipt_image = $filename;
+            $booking->payment_status = 'pending'; // Keep as pending until admin approval
             $booking->save();
         }
-      
 
-        // Process the validated data, such as saving it to the database
-        return redirect()->route('profile.showInvoiceDetails', ['id' => $id])->with('success', 'Payment has been made successfully');
-        
+        return redirect()->route('profile.showInvoiceDetails', ['id' => $id])
+                       ->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.');
     }
 
         //user payment_receipt accept and conform booking for admin function

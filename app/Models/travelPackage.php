@@ -19,6 +19,9 @@ class travelPackage extends Model
             'image_3',
             'duration',
             'tour_type',
+            'service_type',
+            'destination_details',
+            'included_destinations',
             'price_start_from',
             'overview',
             'included_things',
@@ -33,6 +36,7 @@ class travelPackage extends Model
         'price_start_from' => 'decimal:2',
         'per_adult_fee' => 'decimal:2',
         'per_child_fee' => 'decimal:2',
+        'included_destinations' => 'array',
     ];
 
 }
